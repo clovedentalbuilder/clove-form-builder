@@ -1,0 +1,38 @@
+/* Optional stylesheet, shipped as a raw asset. The two node_modules paths below
+   resolve in the CONSUMER's tree, not inside this package — copy this file into
+   your app (or @import the pieces you want) rather than linking it verbatim. */
+
+@import "../node_modules/ckeditor5/dist/ckeditor5.css";
+
+/* PrimeNG >= 18 has no resources/primeng.min.css — styling comes from the
+   design-token theme you register with providePrimeNG() in your app config. */
+/* @import "../../../../node_modules/primeng/resources/primeng.min.css"; */
+
+/* fx design-system stylesheet. Was @instantsys-labs/fx/css/styles-fx.css;
+   now shipped inside this package, right next to this file. */
+@import "./styles-fx.css";
+
+/* Icons: the builder UI uses Font Awesome `fa fa-*` classes. Upstream these came
+   from @instantsys-labs/icons — Font Awesome PRO under a commercial licence,
+   which this package does not redistribute and no longer declares as a peer.
+   Wire up whichever Font Awesome build you are licensed for, e.g. either of: */
+/* @import "../../../../node_modules/@instantsys-labs/icons/fonts/css/all.css"; */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
+
+
+
+@layer base{
+  :root {
+    --color-primary: 21 83 165;
+    --color-secondary: 245 150 14;
+  }
+
+  .card {
+    @apply p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100;
+  }
+
+  .ck-powered-by-balloon{
+    display: none !important;
+  }
+
+}

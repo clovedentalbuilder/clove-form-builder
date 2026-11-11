@@ -1,0 +1,93 @@
+name: Publish clove-form-builder
+
+# Publishes @clovedentalbuilder/clove-form-builder to GitHub Packages.
+#
+# The package is standalone since v4.0.0 — the fx form engine is vendored into
+# projects/clove-form-builder/src/lib/vendor/, so nothing from the private
+# @instantsys-labs scope is installed any more. That means the only registry
+# auth this workflow needs is the built-in GITHUB_TOKEN.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: publish-clove-form-builder
+  cancel-in-progress: false
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Angular 21's CLI requires Node >= 20.19 or >= 22.12. Pin to 22 rather
+      # than the 20 line, which only satisfies it by accident.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://npm.pkg.github.com/
+          scope: '@clovedentalbuilder'
+
+      # package-lock.json is committed and resolves with no peer conflicts, so
+      # a plain `npm ci` is enough — no --force, no --legacy-peer-deps.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check library
+        run: npx tsc -p projects/clove-form-builder/tsconfig.lib.json --noEmit
+
+      # Every run bumps the patch version (same behaviour as the Angular 18 repo).
+      - name: Bump version (patch)
+        run: |
+          cd projects/clove-form-builder
+          current_version=$(node -p "require('./package.json').version")
+          new_version=$(npm version patch --no-git-tag-version | tail -n 1)
+          echo "Version bumped from $current_version to $new_version"
+          echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
+
+      - name: Read version
+        run: echo "PKG_VERSION=$(node -p "require('./projects/clove-form-builder/package.json').version")" >> "$GITHUB_ENV"
+
+      # ng-packagr copies projects/clove-form-builder/package.json into dist, so
+      # the bump above must happen BEFORE this step or dist ships a stale version.
+      - name: Build library
+        run: npx ng build clove-form-builder
+
+      # Guard rail: the whole point of v4 is that the published bundle no longer
+      # reaches for @instantsys-labs/*. Fail loudly if that ever regresses.
+      - name: Verify bundle (no @instantsys-labs, no undeclared imports)
+        run: node scripts/verify-no-instantsys.mjs
+
+      # Catches anything the library build cannot: template errors in the demo
+      # host, and that the built package is actually consumable.
+      - name: Build demo host app against the built library
+        run: npx ng build component-builder --configuration production
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        working-directory: dist/clove-form-builder
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add projects/clove-form-builder/package.json
+          git commit -m "ci: bump version to $PKG_VERSION [skip ci]" || echo "nothing to commit"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Published \`@clovedentalbuilder/clove-form-builder@$PKG_VERSION\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Registry: https://npm.pkg.github.com/" >> "$GITHUB_STEP_SUMMARY"

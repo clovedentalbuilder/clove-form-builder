@@ -1,0 +1,63 @@
+<ul class="space-y-2">
+  <ng-template #renderNode let-node>
+    <!-- Main Node -->
+    <li class="rounded-lg cursor-pointer"
+        (mouseover)="node.hovered = true"
+        (mouseleave)="node.hovered = false">
+      <div class="flex items-center space-x-1 hover:bg-gray-100 p-1 rounded">
+        <!-- Icon or Toggle Button -->
+        <span [ngClass]="{
+              'text-primary': node.iconStyle === 'primary',
+              'text-secondary': node.iconStyle === 'secondary',
+              'text-danger': node.iconStyle === 'danger',
+              'text-gray-200': node.iconStyle === 'default'
+            }">
+              <ng-container *ngIf="node.children?.length; else normalIcon">
+                <button (click)="node.collapsed = !node.collapsed" class="mr-2">
+                  <i class="fa-solid text-gray-400 " [ngClass]="node.collapsed ? 'fa-caret-right' : 'fa-caret-down'"></i>
+                </button>
+              </ng-container>
+              <ng-template #normalIcon>
+                <i [ngClass]="node.icon" class="text-gray-500 w-3 me-2"></i>
+              </ng-template>
+            </span>
+
+        <!-- If href exists, use routerLink. Otherwise, allow toggling for nodes with children -->
+        <ng-container *ngIf="node.href; else toggleNode">
+          <a [routerLink]="node.href" routerLinkActive="active" class="flex-1 text-sm font-medium">
+            {{ node.name }}
+          </a>
+        </ng-container>
+
+        <ng-template #toggleNode>
+              <span (click)="node.children?.length ? node.collapsed = !node.collapsed : null" class="flex-1 text-sm font-medium">
+                {{ node.name }}
+              </span>
+        </ng-template>
+
+        <!-- Badge (optional) -->
+        <span *ngIf="node.badge" class="text-xs font-semibold px-2 py-1 rounded-lg"
+              [ngClass]="{
+                    'bg-blue-500 text-white': node.style === 'primary',
+                    'bg-gray-500 text-white': node.style === 'secondary',
+                    'bg-red-500 text-white': node.style === 'danger',
+                    'bg-gray-200 text-black': node.style === 'default'
+                  }">
+              {{ node.badge }}
+            </span>
+      </div>
+
+      <!-- Recursive Children -->
+      <ul *ngIf="node.children && !node.collapsed" class="ml-4 mt-2 space-y-2">
+        <ng-template ngFor let-child [ngForOf]="node.children">
+          <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: child }"></ng-container>
+        </ng-template>
+      </ul>
+    </li>
+  </ng-template>
+
+  <!-- Render Root Nodes -->
+  <ng-container *ngFor="let node of data!.nodes">
+    <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node }"></ng-container>
+  </ng-container>
+</ul>

@@ -1,0 +1,14 @@
+.custom-gap{
+    gap: 1rem;
+}
+
+.field-required {
+  color: #D60000;
+  font-size: 1.1em;  /* Adjust size if needed */
+  /* vertical-align: super;   */
+  margin-left: 5px;
+}
+.character_color{
+  color: #454545;
+  font-size: 12px;
+}

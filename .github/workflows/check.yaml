@@ -1,0 +1,42 @@
+name: CI
+
+# Build check for pull requests and pushes that are not releases.
+# (The previous version of this file ran `npx nx affected -t build`, inherited
+# from the upprisa-ui Nx monorepo. This is a plain Angular CLI workspace with no
+# Nx, so that command could never have worked here.)
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Angular 21 requires Node >= 20.19 or >= 22.12.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check library
+        run: npx tsc -p projects/clove-form-builder/tsconfig.lib.json --noEmit
+
+      - name: Build library
+        run: npx ng build clove-form-builder
+
+      - name: Verify bundle (no @instantsys-labs, no undeclared imports)
+        run: node scripts/verify-no-instantsys.mjs
+
+      - name: Build demo host app against the built library
+        run: npx ng build component-builder --configuration production

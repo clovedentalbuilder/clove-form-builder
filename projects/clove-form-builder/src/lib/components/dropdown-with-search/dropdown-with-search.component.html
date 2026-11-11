@@ -1,0 +1,32 @@
+<lib-dropdown-with-search-settings-panel
+  [fxData]="fxData"
+  (configuration)="onSettingsChanged($event)"
+  #base
+>
+  <div class="custom-dropdown" [ngClass]="setting('customClassSearch')" [class.dd--disabled]="isDisabled">
+    <form [formGroup]="searchDropDownForm" class="flex gap-4 w-full">
+      <div class="flex-1 relative">
+        <label class="input-label dark:text-gray-300">
+          {{ setting('select-label-search') }} <span class="field-required" *ngIf="isRequired">*</span>
+        </label>
+        <p-select appendTo="body" [options]="options" formControlName="searchSelectedOption" [optionLabel]="setting('label-key-search')" [filter]="setting('isSearchEnabled') !== 'false'" [showClear]="false"
+          [placeholder]="setting('placeholderSearch')" [disabled]="fieldDisabled" class="multiselect" [optionValue]="setting('value-key-search')">
+
+          <!-- Custom Dropdown Icon -->
+          <ng-template pTemplate="dropdownicon">
+            <div class="flex align-items-center dd_down_icon">
+              <span class="pi pi-angle-down text-xl"></span>
+            </div>
+          </ng-template>
+        </p-select>
+
+
+        <small
+          *ngIf="searchDropDownForm.get('searchSelectedOption')?.touched && searchDropDownForm.get('searchSelectedOption')?.errors?.['required']"
+          class="text-red-500">
+          {{ setting('multiErrorSearch')}}
+        </small>
+      </div>
+    </form>
+  </div>
+</lib-dropdown-with-search-settings-panel>

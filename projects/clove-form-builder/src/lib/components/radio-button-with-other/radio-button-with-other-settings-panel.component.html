@@ -1,0 +1,354 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '580px' }"
+  styleClass="rbo-settings-dialog"
+  (onHide)="closeDialog()"
+>
+  <ng-template pTemplate="header">
+    <div class="rbo-dialog-header">
+      <i class="pi pi-cog rbo-header-icon"></i>
+      <div class="rbo-header-text">
+        <span class="rbo-dialog-title">Radio Button Settings</span>
+        <span class="rbo-dialog-name" *ngIf="fxData?.name">#{{ fxData?.name }}</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="settingsForm" class="rbo-settings-body">
+
+    <!-- ══════════════════════════════ -->
+    <!-- Section 1: Option Source       -->
+    <!-- ══════════════════════════════ -->
+    <div class="rbo-section">
+      <div class="rbo-section-header">
+        <i class="pi pi-database"></i>
+        <span>Option Source</span>
+      </div>
+      <div class="rbo-section-body">
+        <div class="rbo-field">
+          <label class="rbo-label">Source</label>
+          <div class="rbo-radio-group">
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="optionSource" value="api" />
+              <span class="rbo-radio-label rbo-radio-api">API</span>
+            </label>
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="optionSource" value="manual" />
+              <span class="rbo-radio-label rbo-radio-manual">Manual</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ -->
+    <!-- Section 2: API Settings        -->
+    <!-- ══════════════════════════════ -->
+    <div class="rbo-section" *ngIf="isApiMode">
+      <div class="rbo-section-header">
+        <i class="pi pi-link"></i>
+        <span>API Configuration</span>
+      </div>
+      <div class="rbo-section-body">
+
+        <div class="rbo-grid-2">
+          <div class="rbo-field">
+            <label class="rbo-label">API Url</label>
+            <input pInputText formControlName="apiUrl" placeholder="e.g. /api/options" class="rbo-input" />
+          </div>
+          <div class="rbo-field">
+            <label class="rbo-label">Service</label>
+            <select formControlName="serviceName" class="rbo-select">
+              <option value="">Select service</option>
+              <option *ngFor="let s of serviceOptions" [value]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rbo-grid-2">
+          <div class="rbo-field">
+            <label class="rbo-label">Label Key</label>
+            <input pInputText formControlName="labelKey" placeholder="label" class="rbo-input" />
+          </div>
+          <div class="rbo-field">
+            <label class="rbo-label">Value Key</label>
+            <input pInputText formControlName="valueKey" placeholder="value" class="rbo-input" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ -->
+    <!-- Section 3: Manual Options      -->
+    <!-- ══════════════════════════════ -->
+    <div class="rbo-section" *ngIf="!isApiMode">
+      <div class="rbo-section-header">
+        <i class="pi pi-list"></i>
+        <span>Manual Options</span>
+      </div>
+      <div class="rbo-section-body">
+
+        <div class="rbo-options-header rbo-grid-2-labels">
+          <span class="rbo-label">Option Label</span>
+          <span class="rbo-label">Value</span>
+        </div>
+
+        <div *ngFor="let opt of manualOptions; let i = index" class="rbo-option-row">
+          <input pInputText [(ngModel)]="opt.option" [ngModelOptions]="{standalone: true}" placeholder="e.g. Yes" class="rbo-input" />
+          <input pInputText [(ngModel)]="opt.value"  [ngModelOptions]="{standalone: true}" placeholder="e.g. yes" class="rbo-input" />
+          <button type="button" class="rbo-remove-btn" (click)="removeOption(i)" title="Remove">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+
+        <button type="button" class="rbo-add-btn" (click)="addOption()">
+          <i class="pi pi-plus"></i> Add Option
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ -->
+    <!-- Section 4: Display Settings    -->
+    <!-- ══════════════════════════════ -->
+    <div class="rbo-section">
+      <div class="rbo-section-header">
+        <i class="pi pi-sliders-h"></i>
+        <span>Display Settings</span>
+      </div>
+      <div class="rbo-section-body">
+
+        <div class="rbo-id-row" *ngIf="fxData?.id">
+          <span class="rbo-id-badge"><i class="pi pi-hashtag"></i> ID:</span>
+          <span class="rbo-id-value">{{ fxData!.id }}</span>
+        </div>
+
+        <div class="rbo-field">
+          <label class="rbo-label">
+            Name <span class="rbo-required-star">*</span>
+            <span class="rbo-name-hint">used to identify this component (e.g. clinical_reasons)</span>
+          </label>
+          <input pInputText formControlName="name" placeholder="e.g. clinical_reasons" class="rbo-input" />
+        </div>
+
+        <div class="rbo-grid-2">
+          <div class="rbo-field">
+            <label class="rbo-label">Label</label>
+            <input pInputText formControlName="label" placeholder="e.g. Select an option" class="rbo-input" />
+          </div>
+          <div class="rbo-field">
+            <label class="rbo-label">Sub Label</label>
+            <input pInputText formControlName="subLabel" placeholder="e.g. (select anyone)" class="rbo-input" />
+          </div>
+        </div>
+
+        <div class="rbo-grid-2">
+          <div class="rbo-field">
+            <label class="rbo-label">Custom CSS Class</label>
+            <input pInputText formControlName="customClass" placeholder="e.g. my-class" class="rbo-input" />
+          </div>
+        </div>
+
+        <div class="rbo-field">
+          <label class="rbo-label">Show as</label>
+          <div class="rbo-radio-group">
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="displayMode" value="radio" />
+              <span class="rbo-radio-label rbo-radio-api">Radio</span>
+            </label>
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="displayMode" value="button" />
+              <span class="rbo-radio-label rbo-radio-manual">Button</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="rbo-field" *ngIf="settingsForm.get('displayMode')?.value === 'radio'">
+          <label class="rbo-label">Layout</label>
+          <div class="rbo-radio-group">
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="radioLayout" value="flex" />
+              <span class="rbo-radio-label rbo-radio-api">Flex</span>
+            </label>
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="radioLayout" value="grid" />
+              <span class="rbo-radio-label rbo-radio-manual">Grid</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="rbo-grid-2">
+          <div class="rbo-field">
+            <label class="rbo-label">Required</label>
+            <div class="rbo-radio-group">
+              <label class="rbo-radio-option">
+                <input type="radio" formControlName="isRequired" value="true" />
+                <span class="rbo-radio-label rbo-radio-yes">Yes</span>
+              </label>
+              <label class="rbo-radio-option">
+                <input type="radio" formControlName="isRequired" value="false" />
+                <span class="rbo-radio-label rbo-radio-no">No</span>
+              </label>
+            </div>
+          </div>
+          <div class="rbo-field">
+            <label class="rbo-label">Error Message</label>
+            <input pInputText formControlName="errorMessage" placeholder="Please select an option" class="rbo-input" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ -->
+    <!-- Section 5: "Other" Option      -->
+    <!-- ══════════════════════════════ -->
+    <div class="rbo-section">
+      <div class="rbo-section-header">
+        <i class="pi pi-pencil"></i>
+        <span>"Other" Option</span>
+      </div>
+      <div class="rbo-section-body">
+
+        <div class="rbo-field">
+          <label class="rbo-label">Show "Other" option</label>
+          <div class="rbo-radio-group">
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="showOtherOption" value="true" />
+              <span class="rbo-radio-label rbo-radio-yes">Yes</span>
+            </label>
+            <label class="rbo-radio-option">
+              <input type="radio" formControlName="showOtherOption" value="false" />
+              <span class="rbo-radio-label rbo-radio-no">No</span>
+            </label>
+          </div>
+        </div>
+
+        <ng-container *ngIf="settingsForm.get('showOtherOption')?.value === 'true'">
+          <div class="rbo-grid-2">
+            <div class="rbo-field">
+              <label class="rbo-label">Other Label</label>
+              <input pInputText formControlName="otherLabel" placeholder="Other" class="rbo-input" />
+            </div>
+            <div class="rbo-field">
+              <label class="rbo-label">Other Placeholder</label>
+              <input pInputText formControlName="otherPlaceholder" placeholder="Enter here..." class="rbo-input" />
+            </div>
+          </div>
+          <div class="rbo-grid-2">
+            <div class="rbo-field">
+              <label class="rbo-label">Other Max Length</label>
+              <input pInputText type="number" formControlName="otherMaxLength" class="rbo-input" />
+            </div>
+            <div class="rbo-field">
+              <label class="rbo-label">Other Error Message</label>
+              <input pInputText formControlName="errorMessageOther" placeholder="Please fill out this field" class="rbo-input" />
+            </div>
+          </div>
+
+          <!-- Regex Validation -->
+          <div class="rbo-regex-divider"></div>
+
+          <div class="rbo-field">
+            <label class="rbo-label">Enable Regex Validation</label>
+            <div class="rbo-radio-group">
+              <label class="rbo-radio-option">
+                <input type="radio" formControlName="enableRegex" value="true" />
+                <span class="rbo-radio-label rbo-radio-yes">Yes</span>
+              </label>
+              <label class="rbo-radio-option">
+                <input type="radio" formControlName="enableRegex" value="false" />
+                <span class="rbo-radio-label rbo-radio-no">No</span>
+              </label>
+            </div>
+          </div>
+
+          <ng-container *ngIf="settingsForm.get('enableRegex')?.value === 'true'">
+            <div class="rbo-regex-header">
+              <span class="rbo-label">Error Label</span>
+              <span class="rbo-label">Regex Pattern</span>
+              <span></span>
+            </div>
+
+            <div *ngFor="let rx of regexList; let i = index" class="rbo-option-row">
+              <input
+                pInputText
+                [(ngModel)]="rx.label"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="e.g. Invalid format"
+                class="rbo-input"
+              />
+              <input
+                pInputText
+                [(ngModel)]="rx.pattern"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="e.g. ^[A-Za-z]+$"
+                class="rbo-input rbo-input-mono"
+              />
+              <button type="button" class="rbo-remove-btn" (click)="removeRegex(i)" title="Remove">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+
+            <button type="button" class="rbo-add-btn" (click)="addRegex()">
+              <i class="pi pi-plus"></i> Add Regex
+            </button>
+          </ng-container>
+        </ng-container>
+
+      </div>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="rbo-dialog-footer">
+      <button pButton label="Cancel" icon="pi pi-times"
+        class="p-button-outlined p-button-secondary rbo-btn-cancel"
+        (click)="closeDialog()"></button>
+      <button pButton label="Save Settings" icon="pi pi-check"
+        class="p-button-primary rbo-btn-save"
+        (click)="saveSettings()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Component Wrapper -->
+<div class="fx-element">
+  <ng-content></ng-content>
+
+  <ng-container *ngIf="fxData?.$fxForm?.$mode !== FxMode.VIEW">
+    <div
+      class="fx-overlay border-gray-400 border rounded cursor-pointer"
+      (click)="onElementSelect(fxData)"
+      (dblclick)="openDialog()"
+    >
+      <div class="fx-actions flex justify-between">
+        <div class="bg-gray-700 text-gray-300 px-2 rounded-t ml-2 text-xs flex justify-center items-center">
+          #{{ fxData?.name }}-<span class="text-xs italic">{{ fxData?.id }}</span>
+        </div>
+        <div class="flex justify-around items-end mr-2">
+          <div
+            class="cursor-pointer bg-secondary text-white w-8 mr-1 text-center rounded-t"
+            title="Settings"
+            (click)="openDialog(); $event.stopPropagation()"
+          >
+            <i class="fa fa-cog text-xs"></i>
+          </div>
+          <div
+            (click)="deleteElement(fxData)"
+            class="cursor-pointer bg-red-600 text-white w-8 mr-1 text-center rounded-t"
+            title="Delete"
+          >
+            <i class="fa fa-times text-xs"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,90 @@
+.field-required, .error_message { color: #D60000; }
+.character_color { color: #454545; font-size: 12px; }
+
+textarea::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F4F4F4;
+  border-radius: 6px;
+}
+textarea::-webkit-scrollbar {
+  width: 8px;
+  background-color: #F4F4F4;
+}
+textarea::-webkit-scrollbar-thumb {
+  background-color: #999999;
+  border-radius: 6px;
+}
+
+.cbg-main-label {
+  font-size: 12px !important;
+  padding-bottom: 4px;
+  margin: 0 0 0 8px;
+  color: #999 !important;
+}
+
+.cbg-sub-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #999;
+}
+
+.cbg-btn-option {
+  padding: 0.15rem;
+  border: 1.5px solid #9bbbd6;
+  border-radius: 6px;
+  background: #f6f6f6;
+  color: #111827;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  width: 240px;
+  height: 80px;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cbg-btn-textarea-container {
+  flex: 0 0 240px;
+}
+
+.cbg-btn-textarea-container textarea {
+  height: 80px !important;
+  min-height: unset;
+}
+
+@media (max-width: 600px) {
+  .cbg-btn-option {
+    width: 100%;
+  }
+
+  .cbg-btn-textarea-container {
+    width: 100% !important;
+    flex: unset;
+  }
+}
+
+.cbg-radio-mode-textarea {
+  height: 80px !important;
+  width: 275px;
+  min-height: unset;
+}
+
+@media (max-width: 600px) {
+  .cbg-radio-mode-textarea {
+    width: 260px;
+  }
+}
+
+.cbg-btn-option:hover {
+  border-color: #9bbbd6;
+}
+
+.cbg-btn-option--selected {
+  background-color: #dae6f0 !important;
+  border-color: #9bbbd6 !important;
+  color: #111827;
+  font-weight: 500;
+}

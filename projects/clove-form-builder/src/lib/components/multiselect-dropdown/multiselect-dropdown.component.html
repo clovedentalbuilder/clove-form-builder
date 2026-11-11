@@ -1,0 +1,30 @@
+<lib-multiselect-dropdown-settings-panel
+  [fxData]="fxData"
+  (configuration)="onSettingsChanged($event)"
+  #base
+>
+  <div class="custom-dropdown" [ngClass]="setting('customClassMulti')">
+    <form [formGroup]="multiselectDropDownForm" class="flex gap-4 w-full">
+      <div class="flex-1 relative">
+        <label class="input-label dark:text-gray-300">
+          {{ setting('select-label-multi') }} <span class="field-required" *ngIf="isRequired">*</span>
+        </label>
+        <p-multiSelect appendTo="body" [options]="options" formControlName="multipleSelectedOption" [optionLabel]="setting('label-key')"
+          [placeholder]="setting('placeholderMulti')" [disabled]="fieldDisabled" class="multiselect">
+
+          <!-- Custom Dropdown Icon -->
+          <ng-template pTemplate="dropdownicon">
+            <div class="flex align-items-center dd_down_icon">
+              <span class="pi pi-angle-down text-xl"></span>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+        <small
+          *ngIf="multiselectDropDownForm.get('multipleSelectedOption')?.touched && multiselectDropDownForm.get('multipleSelectedOption')?.errors?.['required']"
+          class="text-red-500">
+          {{ setting('multiErrorMessage')}}
+        </small>
+      </div>
+    </form>
+  </div>
+</lib-multiselect-dropdown-settings-panel>
