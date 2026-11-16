@@ -265,9 +265,17 @@ input:focus,textarea:focus,select:focus{
   padding: 0;
 } */
 
-:host ::ng-deep .p-dialog .p-dialog-content {
-    background-color: white;
-    padding:0 !important;
+/*
+ * Uploader dialog content. Targets the uploader-only `fx-uploader-dialog-content`
+ * class (set via contentStyleClass on each p-dialog) instead of `:host`, so it
+ * still applies when the consumer appends overlays to <body> (providePrimeNG
+ * overlayAppendTo), and its (0,3,0) specificity + !important beats a consumer's
+ * global `.p-dialog .p-dialog-content` override. The class name is unique, so
+ * dropping `:host` does not leak onto the consumer's own dialogs.
+ */
+::ng-deep .p-dialog .p-dialog-content.fx-uploader-dialog-content {
+  background-color: white !important;
+  padding: 0 !important;
 }
 .p-dialog .p-dialog-footer {
   background-color: #f3f4f6;
