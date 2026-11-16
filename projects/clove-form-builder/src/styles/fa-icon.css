@@ -1,1 +1,28 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+/*
+ * Font Awesome for @clovedentalbuilder/clove-form-builder — CSS alternative to provideCloveFontAwesome().
+ *
+ * Loads the FREE Font Awesome 6 build from cdnjs, the v4 name shims (the engine still uses v4 names
+ * such as fa-hand-o-right) and free stand-ins for the few Font Awesome Pro classes the bundled fx
+ * engine uses (upstream shipped Pro via @instantsys-labs/icons, which is not redistributed).
+ *
+ * Do NOT include this if the host already ships a licensed Font Awesome Pro build.
+ * Keep the fallback block in sync with CLOVE_FONT_AWESOME_PRO_FALLBACK_CSS in
+ * src/lib/font-awesome/font-awesome.ts.
+ */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/v4-shims.min.css');
+
+/* Pro style prefixes → free solid */
+.fa-thin,.fa-light,.fa-duotone,.fa-sharp,.fat,.fal,.fad{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;display:var(--fa-display,inline-block);font-style:normal;font-variant:normal;line-height:1;text-rendering:auto;font-family:"Font Awesome 6 Free";font-weight:900}
+.fa-thin::before,.fa-light::before,.fa-duotone::before,.fa-sharp::before,.fat::before,.fal::before,.fad::before{content:var(--fa)}
+
+/* Pro-only icon names → closest free glyph */
+.fa-table-layout{--fa:"\f0db"}
+.fa-list-tree{--fa:"\f0ca"}
+.fa-head-side-brain{--fa:"\f5dc"}
+.fa-ballot-check{--fa:"\f14a"}
+.fa-circle-dashed{--fa:"\f1ce"}
+.fa-arrow-turn-left{--fa:"\f3e5"}
+.fa-slash-forward{--fa:"\f054"}
+.fa-spinner-third{--fa:"\f1ce"}
+.fa-trophy-alt{--fa:"\f091"}

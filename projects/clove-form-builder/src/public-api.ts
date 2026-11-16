@@ -6,6 +6,10 @@ export * from './lib/fx-builder-wrapper.service';
 export * from './lib/fx-builder-wrapper.component'; // builder // admin
 export * from './lib/components/fx-form-component/fx-form-component.component'; // form preview
 
+// Font Awesome (free, cdnjs) + stand-ins for the Pro glyphs the engine uses — opt-in for hosts
+// without a licensed Font Awesome Pro build. CSS alternative: src/styles/fa-icon.css.
+export * from './lib/font-awesome/font-awesome';
+
 /*
  * ---------------------------------------------------------------------------
  * Merged fx engine (was the separate `@instantsys-labs/fx` package).
