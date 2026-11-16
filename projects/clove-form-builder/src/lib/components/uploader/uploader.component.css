@@ -262,7 +262,7 @@ input:focus,textarea:focus,select:focus{
 
 .p-dialog .p-dialog-content {
   background-color: white;
-  padding: 16px;
+  padding: 0;
 }
 
 .p-dialog .p-dialog-footer {
