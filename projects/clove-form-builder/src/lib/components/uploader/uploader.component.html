@@ -257,37 +257,24 @@
   <p-toast [preventOpenDuplicates]="true" [breakpoints]="{ '426px': { width: '90%' } }" position="top-center"></p-toast>
 
   <!-- Attach from Files dialog -->
-  <p-dialog
-    [modal]="true"
-    [draggable]="false"
-    [resizable]="false"
-    [closable]="false"
-    [showHeader]="false"
-    [(visible)]="iframeDialogVisible"
-    [style]="{ width: isMobileRequest ? '92vw' : '80vw', padding: '4px', 'background-color': '#DEDEDE', height: 'calc(90vh - 4px)' }"
-    contentStyleClass="fx-uploader-dialog-content"
-    [styleClass]="isMobileRequest ? 'lwoAttachFile-dialog is-mobile' : 'lwoAttachFile-dialog'"
-    (onHide)="closeAttachDialog()"
-  >
-    <div class="modal-inset" style="height: 100%; padding: 0;">
-      <div class="modal-body" style="height: 100%; padding: 0;">
-        <div class="attach-iframe-loader" *ngIf="iframeLoading">
-          <i class="pi pi-spin pi-spinner"></i>
-          <span>Loading...</span>
+  <div class="wrkdnAttachFile">
+    <p-dialog [modal]="true" [draggable]="false" [resizable]="false" [closable]="false" [showHeader]="false"
+      [(visible)]="iframeDialogVisible"
+      [style]="{ width: isMobileRequest ? '92vw' : '80vw', padding: '4px', 'background-color': '#DEDEDE', height: 'calc(90vh - 4px)' }"
+      contentStyleClass="fx-uploader-dialog-content"
+      [styleClass]="isMobileRequest ? 'lwoAttachFile-dialog is-mobile' : 'lwoAttachFile-dialog'"
+      (onHide)="closeAttachDialog()">
+      <div class="modal-inset" style="height: 100%; padding: 0;">
+        <div class="modal-body" style="height: 100%; padding: 0;">
+          <div class="attach-iframe-loader" *ngIf="iframeLoading">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Loading...</span>
+          </div>
+          <iframe *ngIf="attachIframeSrc" [src]="attachIframeSrc" width="100%" height="100%" frameBorder="0"
+            scrolling="no" id="fileAttachFrame" style="border: 0; border-radius: 15px;"
+            (load)="onIframeLoad($event)"></iframe>
         </div>
-        <iframe
-          *ngIf="attachIframeSrc"
-          [src]="attachIframeSrc"
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          scrolling="no"
-          id="fileAttachFrame"
-          style="border: 0; border-radius: 15px;"
-          (load)="onIframeLoad($event)"
-        ></iframe>
       </div>
-    </div>
-  </p-dialog>
-
+    </p-dialog>
+  </div>
 </fx-component>
