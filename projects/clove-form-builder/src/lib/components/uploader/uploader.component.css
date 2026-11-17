@@ -276,6 +276,7 @@ input:focus,textarea:focus,select:focus{
 ::ng-deep .p-dialog .p-dialog-content.fx-uploader-dialog-content {
   background-color: white !important;
   padding: 0 !important;
+  border-radius: 14px !important;
 }
 .p-dialog .p-dialog-footer {
   background-color: #f3f4f6;
@@ -322,3 +323,8 @@ input:focus,textarea:focus,select:focus{
   width: 100%; */
 }
  
+.fx-uploader-dialog-content.p-dialog-header .p-dialog-title{
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
