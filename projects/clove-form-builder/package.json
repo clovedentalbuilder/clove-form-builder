@@ -1,6 +1,6 @@
 {
   "name": "@clovedentalbuilder/clove-form-builder",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "Standalone Angular 21 drag-and-drop form builder + form renderer. The fx form engine is bundled in - no @instantsys-labs packages required.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
